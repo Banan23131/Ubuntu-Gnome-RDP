@@ -1,0 +1,33 @@
+name: Ubuntu-VM
+on: 
+  workflow_dispatch:
+   inputs:
+     auth:
+        description: 'VNC Password: '
+        required: true
+        default: '123456'
+defaults:
+  run:
+    shell: bash
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Downloading Gnome-Desktop
+      run: sudo apt-get -qy update && sudo apt-get install -qy ubuntu-gnome-desktop
+    - name: Downloading VNC Server (Tiger)
+      run: sudo apt-get install -qy tigervnc-standalone-server tigervnc-common tigervnc-xorg-extension tigervnc-viewer
+    - name: 'Setting VNC Password'
+      run: printf "${{ github.event.inputs.auth }}\n${{ github.event.inputs.auth }}\nn" | vncpasswd
+    - name: Setting up 'xstartup' file
+      run: printf "#!/bin/sh\nexec /etc/vnc/xstartup\nxrdb $HOME/.Xresources\nvncconfig -iconic &\ndbus-launch --exit-with-session gnome-session &" >> $HOME/.vnc/xstartup
+    - name: 'Starting VNC Server'
+      run: vncserver
+    - name: Downloading Ngrok
+      run: wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip -O ngrok.zip && unzip ngrok.zip && rm ngrok.zip
+    - name: Creating Tunnel
+      env:
+        ngroktoken: ${{ secrets.NGROK_AUTH_TOKEN }}
+      run: |
+        ./ngrok authtoken $ngroktoken
+        ./ngrok tcp 5901
