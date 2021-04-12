@@ -20,7 +20,7 @@ jobs:
     - name: 'Setting VNC Password'
       run: printf "${{ github.event.inputs.auth }}\n${{ github.event.inputs.auth }}\nn" | vncpasswd
     - name: Setting up 'xstartup' file
-      run: printf "#!/bin/sh\nexec /etc/vnc/xstartup\nxrdb $HOME/.Xresources\nvncconfig -iconic &\ndbus-launch --exit-with-session gnome-session &" >> $HOME/.vnc/xstartup
+      run: printf "#!/bin/sh\nexec /etc/vnc/xstartup\nxrdb $HOME/.Xresources\nvncconfig -iconic &\ndbus-launch --exit-with-session gnome-session &" >> $HOME/.vnc/xstartup; sudo chmod +x $HONE/.vnc/xstartup
     - name: 'Starting VNC Server'
       run: vncserver
     - name: Downloading Ngrok
