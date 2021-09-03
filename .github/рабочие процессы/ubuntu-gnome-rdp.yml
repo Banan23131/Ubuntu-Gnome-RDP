@@ -18,9 +18,9 @@ jobs:
     - name: Downloading VNC Server (Tiger)
       run: sudo apt-get install -qy tigervnc-standalone-server tigervnc-common tigervnc-xorg-extension tigervnc-viewer
     - name: 'Setting VNC Password'
-      run: printf "${{ github.event.inputs.auth }}\n${{ github.event.inputs.auth }}\nn" | vncpasswd
+      run: printf "${{ github.event.inputs.auth }}\n${{ github.event.inputs.auth }}\nn" | 
     - name: Setting up 'xstartup' file
-      run: printf "#!/bin/sh\nexec /etc/vnc/xstartup\nxrdb $HOME/.Xresources\nvncconfig -iconic &\ndbus-launch --exit-with-session gnome-session &" >> ~/.vnc/xstartup; sudo chmod +x $HOME/.vnc/xstartup
+      run: printf "#!/bin/sh\nexec /etc/vnc/xstartup\nxrdb $HOME/.Xresources\nvncconfig -iconic &\ndbus-launch --exit-with-session gnome-session &" >> ~/vnc/bin/gnome-session sudo chmod +x /vnc/bin/gnome-session
     - name: 'Starting VNC Server'
       run: vncserver
     - name: Downloading Ngrok
